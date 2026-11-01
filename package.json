@@ -1,0 +1,42 @@
+{
+  "name": "@kweela/identity",
+  "version": "0.2.0",
+  "description": "Portable identity contracts and provider boundary for Kweela applications",
+  "type": "module",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./ckb": "./dist/ckb.mjs",
+    "./CkbDidProvider": "./dist/CkbDidProvider.mjs",
+    "./contracts": "./dist/contracts.mjs",
+    "./IdentityProviderRegistry": "./dist/IdentityProviderRegistry.mjs",
+    "./JoyIdCredentials": "./dist/JoyIdCredentials.mjs",
+    "./OwnershipMessage": "./dist/OwnershipMessage.mjs",
+    "./plugin": "./dist/plugin.mjs",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "check": "tsc --noEmit && vitest run && tsdown",
+    "test": "vitest run",
+    "prepublishOnly": "pnpm build"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "tsdown": "^0.22.13",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.10"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@ckb-ccc/core": "^1.23.0",
+    "@ckb-ccc/did-ckb": "^0.2.15"
+  }
+}
