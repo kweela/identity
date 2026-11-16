@@ -4,6 +4,10 @@
   "description": "Portable identity contracts and provider boundary for Kweela applications",
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kweela/identity"
+  },
   "files": [
     "dist",
     "README.md"
