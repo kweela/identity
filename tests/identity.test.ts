@@ -217,6 +217,16 @@ describe('JoyID credentials', () => {
     expect(await joyId.owns(address, 'abcd')).toBe(true)
   })
 
+  it('matches a main key the registry lists with its uncompressed prefix', async () => {
+    const coordinates = 'ab'.repeat(64)
+    const joyId = new JoyIdCredentials(
+      'ckb_testnet',
+      respond([{ ckb_address: address, public_key: `04${coordinates}` }]),
+    )
+
+    expect(await joyId.owns(address, coordinates)).toBe(true)
+  })
+
   it('refuses a passkey registered elsewhere or an unavailable registry', async () => {
     const elsewhere = new JoyIdCredentials(
       'ckb_testnet',

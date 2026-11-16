@@ -50,7 +50,13 @@ export class JoyIdCredentials {
     })
   }
 
+  /**
+   * A key as plain lowercase hex. An uncompressed P-256 key loses its `04` prefix, since the
+   * registry keeps it and a JoyID identity carries only the coordinates.
+   */
   private static bare(key: string): string {
-    return key.replace(/^0x/i, '').toLowerCase()
+    const hex = key.replace(/^0x/i, '').toLowerCase()
+
+    return hex.length === 130 && hex.startsWith('04') ? hex.slice(2) : hex
   }
 }
