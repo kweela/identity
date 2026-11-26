@@ -18,8 +18,8 @@ const achievement: KweelaLevelAchievement = {
   profileSlug: 'legacy',
   level: 5,
   levelPolicyVersion: 'kweela.levels.v1',
-  achievedAt: 2_000_000_000,
 }
+const issuedAt = 2_000_000_000
 
 describe('Kweela Vellum level claims', () => {
   it('builds the canonical claim payload from authoritative level evidence', () => {
@@ -28,19 +28,18 @@ describe('Kweela Vellum level claims', () => {
       profile_slug: achievement.profileSlug,
       level: achievement.level,
       level_policy_version: achievement.levelPolicyVersion,
-      achieved_at: achievement.achievedAt,
     })
   })
 
   it('builds a typed claim input with a deterministic nonce', () => {
-    const input = buildKweelaLevelClaimInput({ subjectDid, issuerDid, achievement })
+    const input = buildKweelaLevelClaimInput({ subjectDid, issuerDid, achievement, issuedAt })
 
     expect(input).toEqual({
       subject: { did: subjectDid },
       issuerDid,
       schemaHash: KWEELA_LEVEL_ACHIEVED_CLAIM_SCHEMA_HASH,
       payload: kweelaLevelClaimPayload(achievement),
-      issuedAt: achievement.achievedAt,
+      issuedAt,
       nonce: kweelaLevelClaimNonce(achievement),
     })
     expect(KWEELA_LEVEL_ACHIEVED_CLAIM_SCHEMA_ID).toBe('kweela.level-achieved.v1')
@@ -82,17 +81,34 @@ describe('Kweela Vellum level claims', () => {
     for (const level of [0, 1.5, 4_294_967_296]) {
       expect(() => kweelaLevelClaimPayload({ ...achievement, level })).toThrow()
     }
-    for (const achievedAt of [0, 1.5, Number.MAX_SAFE_INTEGER + 1]) {
-      expect(() => kweelaLevelClaimPayload({ ...achievement, achievedAt })).toThrow()
-    }
   })
 
-  it('rejects malformed subject and issuer DIDs', () => {
+  it('rejects malformed subject and issuer DIDs or issuance times', () => {
     expect(() =>
-      buildKweelaLevelClaimInput({ subjectDid: 'did:ckb:invalid', issuerDid, achievement }),
+      buildKweelaLevelClaimInput({
+        subjectDid: 'did:ckb:invalid',
+        issuerDid,
+        achievement,
+        issuedAt,
+      }),
     ).toThrow('subjectDid')
     expect(() =>
-      buildKweelaLevelClaimInput({ subjectDid, issuerDid: 'did:ckb:invalid', achievement }),
+      buildKweelaLevelClaimInput({
+        subjectDid,
+        issuerDid: 'did:ckb:invalid',
+        achievement,
+        issuedAt,
+      }),
     ).toThrow('issuerDid')
+    for (const invalidIssuedAt of [0, 1.5, Number.MAX_SAFE_INTEGER + 1]) {
+      expect(() =>
+        buildKweelaLevelClaimInput({
+          subjectDid,
+          issuerDid,
+          achievement,
+          issuedAt: invalidIssuedAt,
+        }),
+      ).toThrow('issuedAt')
+    }
   })
 })

@@ -5,14 +5,13 @@ import { isCkbDid } from './ckb'
 
 export const KWEELA_LEVEL_ACHIEVED_CLAIM_SCHEMA_ID = 'kweela.level-achieved.v1' as const
 export const KWEELA_LEVEL_ACHIEVED_CLAIM_SCHEMA_HASH =
-  '0x380a2dcb476db5ca1db95f282b6dfe40462054b1a0e27bb44551fba94324bb00' as const
+  '0xdf3a7297412342a7650b183a24c90f413ddb4e524e7911928c990d55380f9456' as const
 
 export type KweelaLevelAchievement = {
   accountId: string
   profileSlug: string
   level: number
   levelPolicyVersion: string
-  achievedAt: number
 }
 
 export type KweelaLevelAchievedClaimPayload = {
@@ -20,13 +19,13 @@ export type KweelaLevelAchievedClaimPayload = {
   profile_slug: string
   level: number
   level_policy_version: string
-  achieved_at: number
 }
 
 export type KweelaLevelClaimInputOptions = {
   subjectDid: string
   issuerDid: string
   achievement: KweelaLevelAchievement
+  issuedAt: number
 }
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
@@ -57,7 +56,7 @@ function requireLevel(value: number): number {
 
 function requireTimestamp(value: number): number {
   if (!Number.isSafeInteger(value) || value < 1) {
-    throw new TypeError('Kweela achievedAt must be a positive safe-integer Unix timestamp.')
+    throw new TypeError('issuedAt must be a positive safe-integer Unix timestamp.')
   }
   return value
 }
@@ -75,7 +74,6 @@ export function kweelaLevelClaimPayload(
     profile_slug: requireToken(achievement.profileSlug, 'Kweela profileSlug'),
     level: requireLevel(achievement.level),
     level_policy_version: requireToken(achievement.levelPolicyVersion, 'Kweela levelPolicyVersion'),
-    achieved_at: requireTimestamp(achievement.achievedAt),
   }
 }
 
@@ -102,7 +100,7 @@ export function buildKweelaLevelClaimInput(
     issuerDid: requireDid(options.issuerDid, 'issuerDid'),
     schemaHash: KWEELA_LEVEL_ACHIEVED_CLAIM_SCHEMA_HASH,
     payload,
-    issuedAt: payload.achieved_at,
+    issuedAt: requireTimestamp(options.issuedAt),
     nonce: kweelaLevelClaimNonce(options.achievement),
   }
 }

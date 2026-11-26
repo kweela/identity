@@ -52,7 +52,6 @@ const achievement = {
   profileSlug: account.slug,
   level: account.level,
   levelPolicyVersion: 'kweela.levels.v1',
-  achievedAt: account.levelAchievedAt,
 }
 
 const key = kweelaLevelClaimKey(achievement)
@@ -60,6 +59,7 @@ const input = buildKweelaLevelClaimInput({
   subjectDid: linkedIdentity.did,
   issuerDid: configuredIssuerDid,
   achievement,
+  issuedAt: issuance.createdAtSeconds,
 })
 const prepared = await writeClaim({ issuerSigner, scripts, input })
 ```
@@ -67,9 +67,9 @@ const prepared = await writeClaim({ issuerSigner, scripts, input })
 The server must obtain every `achievement` field from the authoritative Kweela API. Before calling
 the adapter, it must revalidate the authenticated account, current DID controller, and achieved
 level. It must reserve `key` with a database uniqueness constraint, persist the exact signed
-transaction before broadcast, and reconcile uncertain submissions by their saved transaction and
-deterministic nonce. Issuance must remain disabled unless all issuer, script, RPC, confirmation, and
-secret settings are present.
+transaction and issuance time before broadcast, and reconcile uncertain submissions by their saved
+transaction and deterministic nonce. Issuance must remain disabled unless all issuer, script, RPC,
+confirmation, and secret settings are present.
 
 The adapter does not query eligibility, store state, sign transactions, broadcast transactions, or
 prevent duplicates on its own. The private API owns those responsibilities. The public payload
