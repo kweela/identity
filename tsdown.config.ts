@@ -10,6 +10,7 @@ export default defineConfig({
     'src/JoyIdCredentials.ts',
     'src/OwnershipMessage.ts',
     'src/plugin.ts',
+    'src/vellum.ts',
   ],
   dts: true,
   exports: true,

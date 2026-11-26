@@ -18,6 +18,9 @@ importers:
       '@types/node':
         specifier: ^26.6.4
         version: 26.6.4
+      '@usevellum/sdk':
+        specifier: 0.2.0
+        version: 0.2.0(@ckb-ccc/core@1.23.0(typescript@6.0.3))(@ckb-ccc/did-ckb@0.2.15(typescript@6.0.3))
       tsdown:
         specifier: ^0.22.13
         version: 0.22.14(typescript@6.0.3)
@@ -205,6 +208,12 @@ packages:
 
   '@types/node@26.6.4':
     resolution: {integrity: sha512-ldVPDCzj7fsaGZrLB0NuHuTvJcsNasysBAqMolr/cgxrLd1xbqxIr3XJiPnHHJUCxj5sNF1vnRj9aWnrVh5Jcg==}
+
+  '@usevellum/sdk@0.2.0':
+    resolution: {integrity: sha512-2zoAN32wOH0SgFZJALyvpB3BZ2nnus1BMveZdg6ZYgWFCp71tyEHXVEjH7pwArJLIYvZGZe8PExrbN4kGFmWyw==}
+    peerDependencies:
+      '@ckb-ccc/core': ^1.19.1
+      '@ckb-ccc/did-ckb': ^0.2.9
 
   '@vitest/expect@4.1.11':
     resolution: {integrity: sha512-VX2x5vNJXET47KAFzwERI+KRMtTTCSWTfSMKsW7JsUsXV4psq++e3DvZpuTDOpHcxytiDs6p2nhVb2tVDiiUYw==}
@@ -1054,6 +1063,12 @@ snapshots:
   '@types/node@26.6.4':
     dependencies:
       undici-types: 8.9.0
+
+  '@usevellum/sdk@0.2.0(@ckb-ccc/core@1.23.0(typescript@6.0.3))(@ckb-ccc/did-ckb@0.2.15(typescript@6.0.3))':
+    dependencies:
+      '@ckb-ccc/core': 1.23.0(typescript@6.0.3)
+      '@ckb-ccc/did-ckb': 0.2.15(typescript@6.0.3)
+      '@ipld/dag-cbor': 10.0.2
 
   '@vitest/expect@4.1.11':
     dependencies:

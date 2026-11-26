@@ -36,3 +36,41 @@ Its `network` setting is `ckb` for mainnet; anything else selects `ckb_testnet`.
 Supported signers are CKB secp256k1 wallets, whose lock is derived from the public key, and JoyID,
 whose passkey is matched to its address through JoyID's credential registry. Other signers are
 reported as `unsupported_signer`.
+
+## Vellum level claims
+
+The optional `@kweela/identity/vellum` entry point converts an API-authorized level achievement
+into the canonical `kweela.level-achieved.v1` Vellum claim input. It validates the public evidence
+and derives a stable account-and-level key and nonce for retries.
+
+```ts
+import { writeClaim } from '@usevellum/sdk'
+import { buildKweelaLevelClaimInput, kweelaLevelClaimKey } from '@kweela/identity/vellum'
+
+const achievement = {
+  accountId: account.id,
+  profileSlug: account.slug,
+  level: account.level,
+  levelPolicyVersion: 'kweela.levels.v1',
+  achievedAt: account.levelAchievedAt,
+}
+
+const key = kweelaLevelClaimKey(achievement)
+const input = buildKweelaLevelClaimInput({
+  subjectDid: linkedIdentity.did,
+  issuerDid: configuredIssuerDid,
+  achievement,
+})
+const prepared = await writeClaim({ issuerSigner, scripts, input })
+```
+
+The server must obtain every `achievement` field from the authoritative Kweela API. Before calling
+the adapter, it must revalidate the authenticated account, current DID controller, and achieved
+level. It must reserve `key` with a database uniqueness constraint, persist the exact signed
+transaction before broadcast, and reconcile uncertain submissions by their saved transaction and
+deterministic nonce. Issuance must remain disabled unless all issuer, script, RPC, confirmation, and
+secret settings are present.
+
+The adapter does not query eligibility, store state, sign transactions, broadcast transactions, or
+prevent duplicates on its own. The private API owns those responsibilities. The public payload
+contains no XP, mutable reputation totals, raw activity, private account data, or credentials.
