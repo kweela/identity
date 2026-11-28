@@ -1,6 +1,6 @@
 {
   "name": "@kweela/identity",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Portable identity contracts and provider boundary for Kweela applications",
   "type": "module",
   "license": "MIT",
