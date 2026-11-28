@@ -74,3 +74,25 @@ confirmation, and secret settings are present.
 The adapter does not query eligibility, store state, sign transactions, broadcast transactions, or
 prevent duplicates on its own. The private API owns those responsibilities. The public payload
 contains no XP, mutable reputation totals, raw activity, private account data, or credentials.
+
+## Issuing credentials
+
+When `credentials` is set, the provider exposes `provider.credentials`, an
+`IdentityCredentialIssuer` that signs level claims as the platform's issuer DID.
+
+```ts
+identityPlugin.create({
+  network: 'ckb_testnet',
+  credentials: {
+    issuerDid: 'did:ckb:...',
+    issuerPrivateKey: '0x...',
+    // Optional on testnet, where Vellum's deployment is the default; required on mainnet.
+    scripts: { claimType, didLock },
+  },
+})
+```
+
+`prepareLevel` builds and signs the claim without broadcasting it and returns the transaction hash
+as `reference` with the signed bytes as `submission`. The application saves both, then calls
+`submit`, which is safe to repeat, and follows the transaction with `status`. The issuer is null
+while the issuer DID or key is missing, and `@usevellum/sdk` is loaded only when it is configured.

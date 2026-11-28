@@ -1,5 +1,7 @@
 import type {
+  CredentialSubmissionStatus,
   IdentityController,
+  IdentityCredentialIssuer,
   IdentityNetwork,
   IdentityOwnershipChallenge,
   IdentityOwnershipFailure,
@@ -9,7 +11,9 @@ import type {
   IdentityProfile,
   IdentityProvider,
   IdentitySignature,
+  LevelAchievement,
   PortableCredential,
+  PreparedCredential,
 } from './contracts'
 
 import {
@@ -34,6 +38,10 @@ export {
 }
 export default identityPlugin
 export type {
+  CredentialSubmissionStatus,
+  IdentityCredentialIssuer,
+  LevelAchievement,
+  PreparedCredential,
   CkbDidProviderOptions,
   CkbDidRecords,
   CkbNetwork,

@@ -11,6 +11,7 @@ export default defineConfig({
     'src/OwnershipMessage.ts',
     'src/plugin.ts',
     'src/vellum.ts',
+    'src/VellumCredentialIssuer.ts',
   ],
   dts: true,
   exports: true,

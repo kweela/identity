@@ -23,6 +23,7 @@
     "./OwnershipMessage": "./dist/OwnershipMessage.mjs",
     "./plugin": "./dist/plugin.mjs",
     "./vellum": "./dist/vellum.mjs",
+    "./VellumCredentialIssuer": "./dist/VellumCredentialIssuer.mjs",
     "./package.json": "./package.json"
   },
   "scripts": {
