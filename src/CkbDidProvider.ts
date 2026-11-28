@@ -3,6 +3,7 @@ import { listDidCkbsByLock, resolveDidCkb, type DidCkbRecord } from '@ckb-ccc/di
 
 import { isCkbDid } from './ckb'
 import type {
+  IdentityCredentialIssuer,
   IdentityOwnershipProof,
   IdentityOwnershipResult,
   IdentityProfile,
@@ -26,6 +27,7 @@ export interface CkbDidProviderOptions {
   records?: CkbDidRecords
   joyId?: JoyIdCredentials
   ownedLimit?: number
+  credentials?: IdentityCredentialIssuer | null
 }
 
 /**
@@ -36,6 +38,7 @@ export class CkbDidProvider implements IdentityProvider {
   private readonly records: CkbDidRecords
   private readonly joyId: JoyIdCredentials
   private readonly ownedLimit: number
+  readonly credentials: IdentityCredentialIssuer | null
 
   constructor(
     readonly network: CkbNetwork,
@@ -48,12 +51,19 @@ export class CkbDidProvider implements IdentityProvider {
     }
     this.joyId = options.joyId ?? new JoyIdCredentials(network)
     this.ownedLimit = options.ownedLimit ?? 20
+    this.credentials = options.credentials ?? null
   }
 
-  static open(network: CkbNetwork, options?: CkbDidProviderOptions): CkbDidProvider {
-    const client = network === 'ckb' ? new ccc.ClientPublicMainnet() : new ccc.ClientPublicTestnet()
-
+  static open(
+    network: CkbNetwork,
+    options?: CkbDidProviderOptions,
+    client: ccc.Client = CkbDidProvider.clientFor(network),
+  ): CkbDidProvider {
     return new CkbDidProvider(network, client, options)
+  }
+
+  static clientFor(network: CkbNetwork): ccc.Client {
+    return network === 'ckb' ? new ccc.ClientPublicMainnet() : new ccc.ClientPublicTestnet()
   }
 
   accepts(did: string): boolean {
