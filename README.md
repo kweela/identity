@@ -96,3 +96,30 @@ identityPlugin.create({
 as `reference` with the signed bytes as `submission`. The application saves both, then calls
 `submit`, which is safe to repeat, and follows the transaction with `status`. The issuer is null
 while the issuer DID or key is missing, and `@usevellum/sdk` is loaded only when it is configured.
+
+## Setting up an issuer
+
+Credentials are issued as a `did:ckb` identity the platform owns, signed by the CKB secp256k1
+key that controls it. A passkey wallet such as JoyID cannot be used, because the server signs with
+a raw key. No node is needed: the provider and this script use CCC's public RPC.
+
+1. Create a key and note the address it prints:
+
+   ```sh
+   node scripts/create-issuer.mjs key
+   ```
+
+2. Fund that address. On testnet use the faucet at https://faucet.nervos.org. Creating the DID locks
+   a refundable deposit, and every credential locks the capacity of its own claim cell plus a small
+   fee, so fund it generously (a few thousand testnet CKB covers early testing).
+
+3. Create the DID that key controls. The command waits until the transaction commits:
+
+   ```sh
+   ISSUER_KEY=0x... node scripts/create-issuer.mjs did
+   ```
+
+4. Set the two printed values in the application's environment, for example
+   `IDENTITY_CREDENTIAL_ISSUER_DID` and `IDENTITY_CREDENTIAL_ISSUER_KEY` in the Kweela API, and keep
+   the key secret. Add `NETWORK=ckb` to both commands for mainnet, where the Vellum scripts must
+   also be configured explicitly.
